@@ -1,0 +1,59 @@
+= Ansible Automation Platform - Standalone Server
+Álvaro López Medina <alopezme@redhat.com>
+v1.0, 2024-07
+// Metadata
+:description: This project is a quickstart to deploy Red Hat Ansible Automation Platform in standalone mode for a testing environment
+:keywords: Ansible, Automation, script, standalone, red hat
+// Create TOC wherever needed
+:toc: macro
+:sectanchors:
+:sectnumlevels: 3
+:sectnums: 
+:source-highlighter: pygments
+:imagesdir: docs/images
+// Start: Enable admonition icons
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+// Icons for GitHub
+:yes: :heavy_check_mark:
+:no: :x:
+endif::[]
+ifndef::env-github[]
+:icons: font
+// Icons not for GitHub
+:yes: icon:check[]
+:no: icon:times[]
+endif::[]
+
+// Create the Table of contents here
+toc::[]
+
+== Introduction
+
+This project is a quickstart to deploy Red Hat Ansible Automation Platform in standalone mode for a testing environment.
+
+== Installation Environment
+
+
+
+== Prerequisites
+
+
+
+== Installation
+
+
+
+== Configuration
+
+
+
+
+== Useful Links
+
+* https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4[AAP Documentation].
+
