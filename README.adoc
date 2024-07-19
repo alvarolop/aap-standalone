@@ -34,18 +34,87 @@ toc::[]
 
 == Introduction
 
+Red Hat Ansible Automation Platform is a comprehensive suite for automating IT processes, enabling organizations to streamline operations, manage complex deployments, and orchestrate IT environments at scale.
+
+It builds on the open-source Ansible project by adding enterprise-grade features such as a web-based user interface, RESTful API, and role-based access control, facilitating collaboration among different teams.
+
 This project is a quickstart to deploy Red Hat Ansible Automation Platform in standalone mode for a testing environment.
 
 == Installation Environment
 
+In order to test this on your laptop, you will probably prefer to create a VM and deploy it inside. If you already use a Linux workstation, I recommend you to use https://kcli.readthedocs.io/en/latest/[kcli], which is a tool meant to provide a unified user experience when interacting many virtualization providers.
+
+You just need to download the RHEL `qcow2` image from https://access.redhat.com/downloads/content/rhel[Red Hat Customer Portal]. For this playground, I downloaded the `Red Hat Enterprise Linux 8.10 KVM Guest Image`.
+
+Then, apply the following `kcli` plan:
+
+[source, bash]
+----
+kcli create plan aap -f infrastructure/kcli-plan.yaml
+----
+
+You can see the created VMs with the following command:
+
+[source, bash]
+----
+kcli start plan aap
+kcli get vms
+----
+
+Finally, add the new VM to the `/etc/hosts`:
+
+[source, bash]
+----
+sudo sh -c 'echo "192.168.122.150   aap.local" >> /etc/hosts'
+----
+
+You should be able to access the VM with the following command:
+
+[source, bash]
+----
+ssh user@aap.local
+----
 
 
 == Prerequisites
 
+=== Subscription
 
+You must have valid subscriptions attached on all nodes before installing Red Hat Ansible Automation Platform.
+
+[source, bash]
+----
+# Register the machine
+sudo subscription-manager register
+
+# List possible subscriptions
+sudo subscription-manager list --available --all | grep "Ansible Automation Platform" -B 3 -A 6
+
+# Attach subscription (If Simple Content Access is disabled)
+sudo subscription-manager attach --pool=<pool_id>
+----
+
+
+=== Installer
+
+Choose the Red Hat Ansible Automation Platform installer you need based on your Red Hat Enterprise Linux environment internet connectivity.
+
+[source, bash]
+----
+sudo dnf install --enablerepo=ansible-automation-platform-2.4-for-rhel-8-x86_64-rpms ansible-automation-platform-installer
+----
+
+The default Ansible Inventory will be located at `/opt/ansible-automation-platform/installer`.
 
 == Installation
 
+We will use the *Standalone automation controller with a database on the same node* scenario. This scenario includes installation of automation controller, including the web front end, REST API backend, and database on a single machine. It installs PostgreSQL, and configures the automation controller to use that as its database. This is considered the standard automation controller installation scenario.
+
+
+[source, bash]
+----
+ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ANSIBLE_HOST_KEY_CHECKING=False ./setup.sh -e @credentials.yml -- --ask-vault-pass
+----
 
 
 == Configuration
@@ -56,4 +125,18 @@ This project is a quickstart to deploy Red Hat Ansible Automation Platform in st
 == Useful Links
 
 * https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4[AAP Documentation].
+* Do you want to get the most out of the installation? Check the https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4/html-single/getting_started_with_automation_controller/index[Getting Started guide].
 
+
+== Annex: Enable Cockpit
+
+The RHEL web console is a web-based graphical interface, which is based on the upstream Cockpit project. By using it, you can perform system administration tasks, such as inspecting and controlling systemd services, managing storage, configuring networks, analyzing network issues, and inspecting logs.
+
+[source, bash]
+----
+sudo systemctl enable --now cockpit.socket
+----
+
+Now, as `firewalld` is disabled in this VM, you can access Cockpit in this URL: https://aap.local:9090/[https://aap.local:9090].
+
+You can find more information in the https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html-single/managing_systems_using_the_rhel_8_web_console/index#installing-the-web-console_getting-started-with-the-rhel-8-web-console[official documentation].
