@@ -106,6 +106,30 @@ sudo dnf install --enablerepo=ansible-automation-platform-2.4-for-rhel-8-x86_64-
 
 The default Ansible Inventory will be located at `/opt/ansible-automation-platform/installer`.
 
+
+=== SSL Certificates
+
+IMPORTANT: WIP
+
+
+=== LDAP integration
+
+IMPORTANT: WIP
+
+
+
+
+=== [Optional] RHEL Packages
+
+
+[source, bash]
+----
+sudo dnf install tree jq
+----
+
+
+
+
 == Installation
 
 We will use the *Standalone automation controller with a database on the same node* scenario. This scenario includes installation of automation controller, including the web front end, REST API backend, and database on a single machine. It installs PostgreSQL, and configures the automation controller to use that as its database. This is considered the standard automation controller installation scenario.
@@ -113,11 +137,29 @@ We will use the *Standalone automation controller with a database on the same no
 
 [source, bash]
 ----
+# Override the default inventory with yours
+sudo cp inventory /opt/ansible-automation-platform/installer
+
+cd /opt/ansible-automation-platform/installer
+sudo ./setup.sh
+
+# Better alternative
 ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ANSIBLE_HOST_KEY_CHECKING=False ./setup.sh -e @credentials.yml -- --ask-vault-pass
 ----
 
 
-== Configuration
+
+After installing, you should be able to access AAP in the following URL: https://aap.local[https://aap.local]
+
+
+
+== Postinstall
+
+Before you can use automation controller, you must have a valid subscription, which authorizes its use. If you already have a subscription to a Red Hat product, you can acquire an automation controller subscription through that RH subscription. You can check the process in this https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4/html-single/getting_started_with_automation_controller/index#controller-importing-subscriptions[section of the documentation].
+
+
+* Navigate to the https://console.redhat.com/subscriptions/manifests[RH Hybrid Cloud Console] and export your Subscription Manifest.
+
 
 
 
@@ -126,6 +168,8 @@ ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ANSIBLE_HOST_KEY_CHECKING=False
 
 * https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4[AAP Documentation].
 * Do you want to get the most out of the installation? Check the https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4/html-single/getting_started_with_automation_controller/index[Getting Started guide].
+* Need a list of requirements for your installation? Check the https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4/html-single/red_hat_ansible_automation_platform_planning_guide/index#platform-system-requirements[Requirements Section].
+
 
 
 == Annex: Enable Cockpit
@@ -140,3 +184,4 @@ sudo systemctl enable --now cockpit.socket
 Now, as `firewalld` is disabled in this VM, you can access Cockpit in this URL: https://aap.local:9090/[https://aap.local:9090].
 
 You can find more information in the https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html-single/managing_systems_using_the_rhel_8_web_console/index#installing-the-web-console_getting-started-with-the-rhel-8-web-console[official documentation].
+
